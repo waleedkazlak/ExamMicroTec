@@ -1,0 +1,64 @@
+﻿@model List<AccountReportModelView>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+   
+    <table class="table">
+        <thead>
+            <tr>
+                
+                <th scope="col">Top Level Account</th>
+                <th scope="col">Total Balance</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr onclick="onAccountClick('@item.TopLevelAccount.Trim()')">
+                    @Html.Hidden("Account-"+item.TopLevelAccount.Trim(),item.TopLevelAccount,new { Id="Account-"+item.TopLevelAccount.Trim() })
+                    <td>@item.TopLevelAccount</td>
+                    <td>@item.TotalBalance</td>
+
+                </tr>
+            }
+            
+            
+        </tbody>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+       
+    });
+    function onAccountClick(ID) {
+        var postData = {
+            ID: ID
+        };
+        $.ajax({
+            cache: false,
+            type: "GET",
+            url: "@(Url.Action("AccountDetails", "Home"))",
+            data: postData,
+            success: function (data, textStatus, jqXHR) {
+                debugger;
+                var finalText = "";
+                $.each(data, function (index, current) {
+                    finalText += "Account "+ current.topLevelAccount + "= " + current.totalBalance + "\n";
+                });
+                alert(finalText);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(errorThrown);
+            }
+        });
+    }
+   
+</script>
